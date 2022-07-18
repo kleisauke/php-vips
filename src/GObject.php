@@ -57,6 +57,8 @@ abstract class GObject
      */
     private \FFI\CData $pointer;
 
+    public static int $NObjects = 0;
+
     /**
      * Wrap a GObject around an underlying vips resource. The GObject takes
      * ownership of the pointer and will unref it on finalize.
@@ -72,11 +74,13 @@ abstract class GObject
     public function __construct(\FFI\CData $pointer)
     {
         $this->pointer = \FFI::cast(Config::ctypes("GObject"), $pointer);
+        echo ++self::$NObjects . PHP_EOL;
     }
 
     public function __destruct()
     {
         $this->unref();
+        echo --self::$NObjects . PHP_EOL;
     }
 
     public function __clone()
